@@ -22,7 +22,7 @@ def weather():
     city = request.args.get("city")
     if not city:
         return jsonify({"error": "city required"}), 400
-    params = {'q': city, 'appid': API_KEY, 'units': 'metric', 'lang': 'az'}
+    params = {'q': city, 'appid': API_KEY, 'units': 'metric', 'lang': 'en'}
     r = requests.get(BASE_URL, params=params, timeout=10)
     if r.status_code != 200:
         return jsonify(r.json()), r.status_code

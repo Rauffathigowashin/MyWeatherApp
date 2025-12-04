@@ -5,20 +5,20 @@ from dotenv import load_dotenv
 load_dotenv()
 
 API_KEY = os.getenv("OPENWEATHER_API_KEY")
-CITY_NAME = str(input("Şəhər adı daxil edin: ")).strip()
+CITY_NAME = str(input("Enter City Name: ")).strip()
 BASE_URL = "http://api.openweathermap.org/data/2.5/weather"
 
 if not API_KEY:
-    print("❌ Xəta: API Açarı (.env faylından) yüklənmədi.")
+    print("❌ Error: API Key (form .env) Not Found.")
     exit()
 
 parameters = {
     'q': CITY_NAME,
     'appid': API_KEY,
     'units': 'metric',
-    'lang': 'az'
+    'lang': 'en'
 }
-print(f"🌍 {CITY_NAME} üçün hava haqqında məlumat alınır...")
+print(f"🌍 Weather information for {CITY_NAME}")
 
 
 try:
@@ -31,15 +31,15 @@ try:
     sicaklik = main_data.get('temp')
     weather_description = weather_data['weather'][0].get('description')
 
-    print("\n--- Hava haqqında məlumat ---")
-    print(f"Şəhər: {CITY_NAME}")
-    print(f"Havanın vəziyyəti: {weather_description.capitalize()}")
-    print(f"istilik(°C ilə): {sicaklik}°C")
+    print("\n--- Weather Information ---")
+    print(f"City: {CITY_NAME}")
+    print(f"Weather Info: {weather_description.capitalize()}")
+    print(f"Temp(°C): {sicaklik}°C")
 
 except requests.exceptions.HTTPError as err:
-    print(f"❌ HTTP Xətası: {err}")
-    print("API açarınızı və ya şəhər adını kontrol edin.")
+    print(f"❌ HTTP Error: {err}")
+    print("Control your API key and try again.")
 except requests.exceptions.RequestException as e:
-    print(f"❌ Qoşularkən xəta baş verdi: {e}")
+    print(f"❌ Connection Error: {e}")
 
 
