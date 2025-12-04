@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyWeatherApp</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Weather Information</h1>
+        <div class="input-group">
+            <input type="text" id="city-input" placeholder="Enter City Name" required>
+            <button onclick="getWeather()">Get Information</button>
+        </div>
+
+        <div id="weather-result" class="result-box">
+            <p>Enter city name and click button.</p>
+        </div>
+    </div>
+
+    <script>
+        function getWeather() {
+            const city = document.getElementById('city-input').value;
+            const resultBox = document.getElementById('weather-result');
+            resultBox.innerHTML = '<p>Loading....</p>';
+            fetch(`/api/weather?city=${city}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        resultBox.innerHTML = `<p class="error-message">❌ Error: ${data.error}</p>`;
+                    } else if (data.cod && data.cod !== 200) {
+
+                        resultBox.innerHTML = `<p class="error-message">❌ Error: ${data.message || 'Information Not Found'}</p>`;
+                    } else {
+                        const temp = data.main.temp;
+                        const description = data.weather[0].description;
+                        const cityName = data.name;
+
+                        resultBox.innerHTML = `
+                            <h2>${cityName}</h2>
+                            <p class="description">Info: ${description.charAt(0).toUpperCase() + description.slice(1)}</p>
+                            <p class="temperature">${temp}°C</p>
+                        `;
+                    }
+                })
+                .catch(error => {
+                    console.error('Fetch Xətası:', error);
+                    resultBox.innerHTML = `<p class="error-message">❌ Connection Error.</p>`;
+                });
+        }
+    </script>
+</body>
+</html>
